@@ -1,0 +1,231 @@
+:root {
+    --background: #ffffff;
+    --text: #333333;
+    --primary: #3b82f6;
+    --secondary: #10b981;
+    --accent: #8b5cf6;
+    --muted: #f3f4f6;
+    --card-bg: #ffffff;
+    --header-bg: #f4f4f4;
+}
+
+:root.dark-theme {
+    --background: #1a1a1a;
+    --text: #ffffff;
+    --primary: #60a5fa;
+    --secondary: #34d399;
+    --accent: #a78bfa;
+    --muted: #2d2d2d;
+    --card-bg: #2d2d2d;
+    --header-bg: #2d2d2d;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background-color: var(--background);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    background-color: var(--header-bg);
+    padding: 1rem;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+h1, h2, h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.container-estatisticas {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.estatistica {
+    background-color: var(--card-bg);
+    border: 1px solid var(--muted);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    width: 22%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    color: var(--text);
+}
+
+.estatistica:hover {
+    transform: translateY(-5px);
+}
+
+.estatistica i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+}
+
+.filtro-leads {
+    margin-bottom: 1rem;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-forte {
+    background-color: #f87171;
+    color: #7f1d1d;
+}
+
+.status-medio {
+    background-color: #fbbf24;
+    color: #78350f;
+}
+
+.status-fraco {
+    background-color: #60a5fa;
+    color: #1e3a8a;
+}
+
+#tabela-leads {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: var(--text);
+}
+
+#tabela-leads th,
+#tabela-leads td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--muted);
+}
+
+#tabela-leads th {
+    background-color: var(--primary);
+    color: var(--background);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tabela-leads th:hover {
+    background-color: var(--accent);
+}
+
+#tabela-leads tr:nth-child(even) {
+    background-color: var(--muted);
+}
+
+#tabela-leads tr:hover {
+    background-color: var(--accent);
+    color: var(--background);
+}
+
+.btn-excluir {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-excluir:hover {
+    background-color: #dc2626;
+}
+
+#btn-exportar {
+    background-color: var(--secondary);
+    color: var(--background);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#btn-exportar:hover {
+    background-color: var(--accent);
+}
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.theme-toggle label {
+    margin-right: 0.5rem;
+}
+
+#theme-switch {
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    background-color: var(--muted);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#theme-switch::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    top: 1px;
+    left: 1px;
+    background-color: var(--background);
+    transition: transform 0.3s;
+}
+
+#theme-switch:checked {
+    background-color: var(--primary);
+}
+
+#theme-switch:checked::before {
+    transform: translateX(20px);
+}
+
+body * {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .container-estatisticas {
+        flex-direction: column;
+    }
+
+    .estatistica {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    #tabela-leads {
+        font-size: 0.9em;
+    }
+}
+
