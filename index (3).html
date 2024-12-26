@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Qualificação de Leads</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <h1>Painel de Qualificação de Leads</h1>
+    </header>
+    <main>
+        <section id="estatisticas-leads">
+            <h2>Estatísticas de Leads</h2>
+            <div class="container-estatisticas">
+                <div class="estatistica">
+                    <i class="fas fa-users"></i>
+                    <h3>Total de Leads</h3>
+                    <p id="total-leads">0</p>
+                </div>
+                <div class="estatistica">
+                    <i class="fas fa-fire"></i>
+                    <h3>Leads Quentes</h3>
+                    <p id="leads-quentes">0</p>
+                </div>
+                <div class="estatistica">
+                    <i class="fas fa-thermometer-half"></i>
+                    <h3>Leads Mornos</h3>
+                    <p id="leads-mornos">0</p>
+                </div>
+                <div class="estatistica">
+                    <i class="fas fa-snowflake"></i>
+                    <h3>Leads Frios</h3>
+                    <p id="leads-frios">0</p>
+                </div>
+            </div>
+        </section>
+        <section id="leads-recentes">
+            <h2>Leads Recentes</h2>
+            <div class="filtro-leads">
+                <label for="filtro-status">Filtrar por status:</label>
+                <select id="filtro-status">
+                    <option value="todos">Todos</option>
+                    <option value="quente">Quente</option>
+                    <option value="morno">Morno</option>
+                    <option value="frio">Frio</option>
+                </select>
+            </div>
+            <table id="tabela-leads">
+                <thead>
+                    <tr>
+                        <th data-sort="nome">Nome <i class="fas fa-sort"></i></th>
+                        <th data-sort="telefone">Telefone <i class="fas fa-sort"></i></th>
+                        <th data-sort="status">Status <i class="fas fa-sort"></i></th>
+                        <th data-sort="interesse">Interesse <i class="fas fa-sort"></i></th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpo-leads"></tbody>
+            </table>
+        </section>
+        <section id="gerenciamento-palavras-chave">
+            <h2>Gerenciamento de Palavras-chave</h2>
+            <form id="formulario-adicionar-palavra-chave">
+                <input type="text" id="input-palavra-chave" placeholder="Digite uma palavra-chave" required>
+                <button type="submit">Adicionar Palavra-chave</button>
+            </form>
+            <div id="lista-palavras-chave"></div>
+        </section>
+        <button id="btn-exportar">Exportar Leads</button>
+        <button id="btn-adicionar-lead">Adicionar Lead Aleatório</button>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
