@@ -3,9 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 
 // Inicialização do Supabase
 const supabase = createClient(
-    'https://tbdvznmoxuulgbdrhkfo.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZHZ6bm1veHV1bGdiZHJoa2ZvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNDQ0MjU3MSwiZXhwIjoyMDUwMDE4NTcxfQ.MKkmRr4Kef2YpWybB4yX52mfYDmyJXM4Cpe7CJ7-3WI'
-);
+    'DOMINIO',
+    'SENHA';
 
 let leads = [];
 let orderBy = 'asc'; // Variável para alternar a ordenação
