@@ -1,13 +1,9 @@
-// Importar o cliente do Supabase
-import { createClient } from '@supabase/supabase-js';
-
 // Inicialização do Supabase
-const supabase = createClient(
-    'https://tbdvznmoxuulgbdrhkfo.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZHZ6bm1veHV1bGdiZHJoa2ZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NDI1NzEsImV4cCI6MjA1MDAxODU3MX0.FlVe3lCjoJzK8yXaIIN-dX_gCVyUaRFsXzUvyfhMJPg';
+const supabaseUrl = 'https://tbdvznmoxuulgbdrhkfo.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZHZ6bm1veHV1bGdiZHJoa2ZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NDI1NzEsImV4cCI6MjA1MDAxODU3MX0.FlVe3lCjoJzK8yXaIIN-dX_gCVyUaRFsXzUvyfhMJPg';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let leads = [];
-let orderBy = 'asc'; // Variável para alternar a ordenação
 
 // Função para carregar leads do Supabase
 async function carregarLeads() {
@@ -16,7 +12,7 @@ async function carregarLeads() {
             .from('leads_analise')
             .select('*')
             .order('hora', { ascending: false });
-
+        
         if (error) throw error;
 
         leads = data || [];
@@ -25,7 +21,6 @@ async function carregarLeads() {
         preencherTabelaLeads();
     } catch (error) {
         console.error('Erro ao carregar leads:', error);
-        alert(`Erro ao carregar leads: ${error.message}`);
     }
 }
 
@@ -52,8 +47,10 @@ function preencherTabelaLeads(leadsParaExibir = leads) {
         linha.innerHTML = `
             <td>${lead.nome}</td>
             <td>${lead.remoteJid}</td>
+            <td>${lead.mensagem}</td>
             <td><span class="status-badge status-${lead.strength}">${lead.strength}</span></td>
             <td>${lead.category}</td>
+            <td>${lead.confidence}</td>
             <td>${lead.data} ${lead.hora}</td>
             <td><button class="btn-excluir" data-hora="${lead.hora}"><i class="fas fa-trash"></i></button></td>
         `;
@@ -84,7 +81,6 @@ async function excluirLead(hora) {
         preencherTabelaLeads();
     } catch (error) {
         console.error('Erro ao excluir lead:', error);
-        alert(`Erro ao excluir lead: ${error.message}`);
     }
 }
 
@@ -101,30 +97,27 @@ function filtrarLeads() {
 // Função para ordenar leads
 function ordenarLeads(coluna) {
     leads.sort((a, b) => {
-        if (orderBy === 'asc') {
-            return a[coluna] > b[coluna] ? 1 : -1;
-        } else {
-            return a[coluna] < b[coluna] ? 1 : -1;
-        }
+        if (a[coluna] < b[coluna]) return -1;
+        if (a[coluna] > b[coluna]) return 1;
+        return 0;
     });
-    orderBy = orderBy === 'asc' ? 'desc' : 'asc';
     preencherTabelaLeads();
 }
 
 // Função para exportar leads para CSV
 function exportarLeadsCSV() {
     const csvContent = [
-        ["Nome", "Telefone", "Força", "Categoria", "Data", "Hora", "Mensagem", "Confiança"],
+        ["Nome", "Telefone", "Mensagem", "Força", "Categoria", "Confiança", "Data", "Hora"],
         ...leads.map(lead => [
             lead.nome,
             lead.remoteJid,
+            lead.mensagem,
             lead.strength,
             lead.category,
+            lead.confidence,
             lead.data,
-            lead.hora,
-            lead.mensagem,
-            lead.confidence
-        ].map(value => `"${value?.toString().replace(/"/g, '""')}"`))
+            lead.hora
+        ])
     ].map(e => e.join(",")).join("\n");
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -140,6 +133,38 @@ function exportarLeadsCSV() {
     }
 }
 
+// Função para configurar listeners em tempo real
+function configurarListenersTempoReal() {
+    const channel = supabase
+        .channel('public:leads_analise')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'leads_analise' }, payload => {
+            console.log('Mudança detectada:', payload);
+            
+            if (payload.eventType === 'INSERT') {
+                leads.unshift(payload.new);
+            } else if (payload.eventType === 'DELETE') {
+                leads = leads.filter(lead => lead.hora !== payload.old.hora);
+            } else if (payload.eventType === 'UPDATE') {
+                const index = leads.findIndex(lead => lead.hora === payload.new.hora);
+                if (index !== -1) {
+                    leads[index] = payload.new;
+                }
+            }
+            
+            atualizarEstatisticasLeads();
+            preencherTabelaLeads();
+        })
+        .subscribe(status => {
+            if (status === 'SUBSCRIBED') {
+                console.log('Subscribed to real-time changes');
+            }
+        });
+
+    return () => {
+        supabase.removeChannel(channel);
+    };
+}
+
 // Função para alternar o tema
 function toggleTheme(e) {
     if (e.target.checked) {
@@ -151,52 +176,16 @@ function toggleTheme(e) {
     }
 }
 
-// Configuração de listeners em tempo real
-function configurarListenersTempoReal() {
-    const channel = supabase
-        .channel('leads_changes')
-        .on('postgres_changes', {
-            event: '*',
-            schema: 'public',
-            table: 'leads_analise'
-        }, (payload) => {
-            console.log('Mudança detectada:', payload);
-
-            if (payload.eventType === 'INSERT') {
-                leads = [payload.new, ...leads];
-            } else if (payload.eventType === 'DELETE') {
-                leads = leads.filter(lead => lead.hora !== payload.old.hora);
-            } else if (payload.eventType === 'UPDATE') {
-                const index = leads.findIndex(lead => lead.hora === payload.new.hora);
-                if (index !== -1) {
-                    leads[index] = payload.new;
-                }
-            }
-
-            atualizarEstatisticasLeads();
-            preencherTabelaLeads();
-        })
-        .subscribe((status) => {
-            if (status !== 'SUBSCRIBED') {
-                console.error('Erro ao conectar no canal em tempo real:', status);
-            }
-        });
-
-    return () => {
-        supabase.removeChannel(channel);
-    };
-}
-
 // Inicializar o painel
 async function inicializarPainel() {
     try {
         await carregarLeads();
         const unsubscribe = configurarListenersTempoReal();
-
+        
         // Configurar tema inicial
         const themeSwitch = document.getElementById('theme-switch');
         themeSwitch.addEventListener('change', toggleTheme);
-
+        
         // Definir tema inicial com base na preferência do sistema
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             themeSwitch.checked = true;
@@ -204,15 +193,20 @@ async function inicializarPainel() {
         } else {
             document.documentElement.classList.add('light-theme');
         }
-
+        
+        // Adicionar event listeners
+        document.getElementById("btn-exportar").addEventListener("click", exportarLeadsCSV);
+        document.getElementById("filtro-strength").addEventListener("change", filtrarLeads);
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', function() {
+                const coluna = this.getAttribute('data-sort');
+                ordenarLeads(coluna);
+            });
+        });
+        
         console.log('Painel inicializado com sucesso');
-
-        return () => {
-            unsubscribe();
-        };
     } catch (error) {
         console.error('Erro ao inicializar o painel:', error);
-        alert(`Erro ao inicializar o painel: ${error.message}`);
     }
 }
 
