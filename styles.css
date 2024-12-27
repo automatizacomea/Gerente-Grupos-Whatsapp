@@ -6,10 +6,10 @@
     --accent: #8b5cf6;
     --muted: #f3f4f6;
     --card-bg: #ffffff;
-    --header-bg: #f4f4f4;
+    --header-bg: #f4f4f6;
 }
 
-:root.dark-theme {
+.dark-theme {
     --background: #1a1a1a;
     --text: #ffffff;
     --primary: #60a5fa;
@@ -37,6 +37,9 @@ header {
     text-align: center;
     border-radius: 8px;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h1, h2, h3 {
@@ -59,7 +62,6 @@ h1, h2, h3 {
     width: 22%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
-    color: var(--text);
 }
 
 .estatistica:hover {
@@ -74,6 +76,9 @@ h1, h2, h3 {
 
 .filtro-leads {
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .status-badge {
@@ -108,7 +113,6 @@ h1, h2, h3 {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    color: var(--text);
 }
 
 #tabela-leads th,
@@ -152,27 +156,31 @@ h1, h2, h3 {
     background-color: #dc2626;
 }
 
-#btn-exportar {
-    background-color: var(--secondary);
+.btn-primary, .btn-secondary {
     color: var(--background);
     border: none;
     padding: 10px 15px;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-right: 10px;
     font-weight: bold;
 }
 
-#btn-exportar:hover {
+.btn-primary {
+    background-color: var(--primary);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+}
+
+.btn-primary:hover, .btn-secondary:hover {
     background-color: var(--accent);
 }
 
 .theme-toggle {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    margin-bottom: 1rem;
 }
 
 .theme-toggle label {
@@ -210,10 +218,6 @@ h1, h2, h3 {
     transform: translateX(20px);
 }
 
-body * {
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
 @media (max-width: 768px) {
     .container-estatisticas {
         flex-direction: column;
@@ -227,5 +231,9 @@ body * {
     #tabela-leads {
         font-size: 0.9em;
     }
-}
 
+    .filtro-leads {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
