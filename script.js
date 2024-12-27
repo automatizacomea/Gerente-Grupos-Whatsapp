@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 
 // Inicialização do Supabase
 const supabase = createClient(
-    'DOMINIO',
-    'SENHA';
+    'https://tbdvznmoxuulgbdrhkfo.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZHZ6bm1veHV1bGdiZHJoa2ZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NDI1NzEsImV4cCI6MjA1MDAxODU3MX0.FlVe3lCjoJzK8yXaIIN-dX_gCVyUaRFsXzUvyfhMJPg';
 
 let leads = [];
 let orderBy = 'asc'; // Variável para alternar a ordenação
