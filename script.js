@@ -197,6 +197,7 @@ async function inicializarPainel() {
         // Adicionar event listeners
         document.getElementById("btn-exportar").addEventListener("click", exportarLeadsCSV);
         document.getElementById("filtro-strength").addEventListener("change", filtrarLeads);
+        document.getElementById("btn-carregar").addEventListener("click", carregarLeads);
         document.querySelectorAll('th[data-sort]').forEach(th => {
             th.addEventListener('click', function() {
                 const coluna = this.getAttribute('data-sort');
