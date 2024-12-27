@@ -1,6 +1,6 @@
 // Inicialização do Supabase
-const supabaseUrl = 'https://tbdvznmoxuulgbdrhkfo.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZHZ6bm1veHV1bGdiZHJoa2ZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NDI1NzEsImV4cCI6MjA1MDAxODU3MX0.FlVe3lCjoJzK8yXaIIN-dX_gCVyUaRFsXzUvyfhMJPg';
+const supabaseUrl = 'DOMINIO';
+const supabaseKey = 'SENHA';
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let leads = [];
